@@ -81,7 +81,7 @@ def generate_lesson_plans(number_of_lessons, unit_details):
                     "---END LESSON---<br><br>" \
                     "---UNIT SUMMARY---<br>" \
                     "<h1>[Unit Title]</h1>" \
-                    "<h2>Unit Summary</h2>" \                    
+                    "<h2>Unit Summary</h2>" \
                     "<h2>Written by: [Teacher Name]</h2>" \
                     "<h3>Unit Overview:</h3> <p>[Provide a brief overview of the unit, including the main themes and topics covered.]</p>" \
                     "<h3>Unit Objectives:</h3> <ul><li>[Objective 1]</li><li>[Objective 2]</li><li>[Etc...]</li></ul>" \
