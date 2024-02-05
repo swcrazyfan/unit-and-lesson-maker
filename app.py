@@ -3,7 +3,6 @@ import os
 import streamlit as st
 from datetime import datetime
 import tempfile
-import random
 import re
 from docx import Document
 from htmldocx import HtmlToDocx
@@ -49,29 +48,24 @@ def create_zip_file(files, zip_filename):
 
 def generate_lesson_plans(number_of_lessons, unit_details):
     your_s3_bucket_name = os.getenv("S3_BUCKET_NAME")
-    lesson_plan_template = """
-    ---START [Lesson Title {lesson_number}]---
-    <h1>Lesson {lesson_number}: [Lesson Title Here]</h1>
-    <h2>Objectives</h2>
-    <p>[Objectives Here]</p>
-    <h2>Materials Needed</h2>
-    <p>[Materials Here]</p>
-    <h2>Lesson Procedure</h2>
-    <p>[Procedure Here]</p>
-    <h2>Assessment and Evaluation</h2>
-    <p>[Assessment Here]</p>
-    <h2>Additional Resources</h2>
-    <p>[Resources Here]</p>
-    ---END [Lesson Title {lesson_number}]---
-    """
-    full_prompt = "Generate a unit consisting of {number_of_lessons} lesson plans based on the following details:\n{unit_details}\n\n".format(number_of_lessons=number_of_lessons, unit_details=unit_details)
-    for i in range(1, number_of_lessons + 1):
-        full_prompt += lesson_plan_template.format(lesson_number=i)
-    full_prompt += "\n---UNIT SUMMARY---\n[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
+    # Updated prompt to instruct the AI to use a single template repeatedly
+    full_prompt = f"Generate {number_of_lessons} lesson plans for a unit based on the following details:\n{unit_details}\n\n" \
+                  "For each lesson, use the following template and include a unique lesson number and title:\n" \
+                  "---START LESSON---\n" \
+                  "Lesson Number: [Unique Number]\n" \
+                  "Lesson Title: [Title Here]\n" \
+                  "Objectives: [Objectives Here]\n" \
+                  "Materials Needed: [Materials Here]\n" \
+                  "Lesson Procedure: [Procedure Here]\n" \
+                  "Assessment and Evaluation: [Assessment Here]\n" \
+                  "Additional Resources: [Resources Here]\n" \
+                  "---END LESSON---\n\n" \
+                  "---UNIT SUMMARY---\n" \
+                  "[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
     print("Sending the following prompt to OpenAI:\n", full_prompt)
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-16k",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that can generate detailed lesson plans and unit summaries."},
             {"role": "user", "content": full_prompt},
@@ -90,17 +84,16 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     os.remove(temp_prompt_file.name)
 
     # Parse the response and generate DOCX files
-    lesson_pattern = re.compile(r'---START \[Lesson Title (\d+)\]---(.*?)---END \[Lesson Title \1\]---', re.DOTALL)
+    lesson_pattern = re.compile(r'---START LESSON---(.*?)---END LESSON---', re.DOTALL)
     summary_pattern = re.compile(r'---UNIT SUMMARY---(.*?)$', re.DOTALL)
     lesson_matches = lesson_pattern.findall(html_content)
     summary_match = summary_pattern.search(html_content)
     docx_files = []
-    for match in lesson_matches:
-        lesson_number, lesson_content = match
-        docx_filename = f"Lesson_{lesson_number}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+    for i, lesson_content in enumerate(lesson_matches, start=1):
+        docx_filename = f"Lesson_{i}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
         html_to_docx(lesson_content, docx_filename)
         docx_files.append(docx_filename)
-        print(f"Lesson plan {lesson_number} processed and DOCX created.")
+        print(f"Lesson {i} processed and DOCX created.")
 
     if summary_match:
         summary_content = summary_match.group(1)
