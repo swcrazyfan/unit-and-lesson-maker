@@ -66,29 +66,30 @@ def generate_lesson_plans(number_of_lessons, unit_details):
                     "---START LESSON---" \
                     "<h1>Unit Title: [Unit Title Here]</h1>"  \
                     "<h2>Lesson Number: [Unique Number]</h2>" \
-                    "<h2>Lesson Title: [Title Here]</h2>" \
-                    "<strong>Objectives:</strong> <p>[Objectives Here]</p>" \
-                    "<strong>Materials Needed:</strong> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
-                    "<strong>Lesson Procedure:</strong> <ol>" \
+                    "<h2>Lesson Title: [Title Here]</h2></ br>" \
+                    "<H3>Objectives:</h3> <p>[Objectives Here]</p>" \
+                    "<h3>Materials Needed:</h3> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
+                    "<h3>Lesson Procedure:</h3> <ol>" \
                     "<li>Step 1: [Procedure Step 1]</li>" \
                     "<li>Step 2: [Procedure Step 2]</li>" \
                     "<li>Step 3: [Procedure Step 3]</li>" \
                     "<li>Step 4: [Procedure Step 4]</li>" \
                     "</ol>" \
-                    "<strong>Assessment and Evaluation:</strong> <p>[Assessment Here]</p>" \
-                    "<strong>Additional Resources:</strong> <ul><li>[Resource 1]</li><li>[Resource 2]</li><li>[Etc...]</li></ul>" \
+                    "<h3>Assessment and Evaluation:</h3> <p>[Assessment Here]</p>" \
+                    "<h3>Additional Resources:</h3> <ul><li>[Resource 1]</li><li>[Resource 2]</li><li>[Etc...]</li></ul>" \
                     "---END LESSON---<br><br>" \
                     "---UNIT SUMMARY---<br>" \
+                    "<h1>[Unit Title]</h1>" \
                     "<h2>Unit Summary</h2>" \
-                    "<strong>Unit Overview:</strong> <p>[Provide a brief overview of the unit, including the main themes and topics covered.]</p>" \
-                    "<strong>Unit Objectives:</strong> <ul><li>[Objective 1]</li><li>[Objective 2]</li><li>[Etc...]</li></ul>" \
-                    "<strong>Lesson Summaries:</strong> <ol>" \
+                    "<h3>Unit Overview:</h3> <p>[Provide a brief overview of the unit, including the main themes and topics covered.]</p>" \
+                    "<h3>Unit Objectives:</h3> <ul><li>[Objective 1]</li><li>[Objective 2]</li><li>[Etc...]</li></ul>" \
+                    "<h3>Lesson Summaries:</h3> <ol>" \
                     "<li>Lesson 1: [Brief Summary]</li>" \
                     "<li>Lesson 2: [Brief Summary]</li>" \
                     "<li>Etc...</li>" \
                     "</ol>" \
-                    "<strong>Materials Needed for the Unit:</strong> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
-                    "<strong>Additional Notes:</strong> <p>[Any other relevant information, notes for the teacher, or suggestions for extending the unit.]</p>" \
+                    "<h3>Materials Needed for the Unit:</h3> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
+                    "<h3>Additional Notes:</h3> <p>[Any other relevant information, notes for the teacher, or suggestions for extending the unit.]</p>" \
                     "[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
     print("Sending the following prompt to OpenAI:\n", full_prompt)
 
