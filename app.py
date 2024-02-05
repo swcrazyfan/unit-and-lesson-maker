@@ -65,22 +65,23 @@ def generate_lesson_plans(number_of_lessons, unit_details):
                     "For each lesson, use the following template and include a unique lesson number and title:\n" \
                     "---START LESSON---" \
                     "<h1>Unit Title: [Unit Title Here]</h1>"  \
+                    "<h2>Written by: [Teacher Name]</h2>" \
                     "<h2>Lesson Number: [Unique Number]</h2>" \
                     "<h2>Lesson Title: [Title Here]</h2></ br>" \
                     "<H3>Objectives:</h3> <p>[Objectives Here]</p>" \
-                    "<h3>Materials Needed:</h3> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
                     "<h3>Lesson Procedure:</h3> <ol>" \
                     "<li>Step 1: [Procedure Step 1]</li>" \
                     "<li>Step 2: [Procedure Step 2]</li>" \
                     "<li>Step 3: [Procedure Step 3]</li>" \
-                    "<li>Step 4: [Procedure Step 4]</li>" \
                     "</ol>" \
                     "<h3>Assessment and Evaluation:</h3> <p>[Assessment Here]</p>" \
+                    "<h3>Materials Needed:</h3> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
                     "<h3>Additional Resources:</h3> <ul><li>[Resource 1]</li><li>[Resource 2]</li><li>[Etc...]</li></ul>" \
                     "---END LESSON---<br><br>" \
                     "---UNIT SUMMARY---<br>" \
                     "<h1>[Unit Title]</h1>" \
-                    "<h2>Unit Summary</h2>" \
+                    "<h2>Unit Summary</h2>" \                    
+                    "<h2>Written by: [Teacher Name]</h2>" \
                     "<h3>Unit Overview:</h3> <p>[Provide a brief overview of the unit, including the main themes and topics covered.]</p>" \
                     "<h3>Unit Objectives:</h3> <ul><li>[Objective 1]</li><li>[Objective 2]</li><li>[Etc...]</li></ul>" \
                     "<h3>Lesson Summaries:</h3> <ol>" \
@@ -149,13 +150,15 @@ def generate_lesson_plans(number_of_lessons, unit_details):
 st.title("Lesson Plan and Unit Summary Generator")
 number_of_lessons = st.number_input("Number of Lessons:", min_value=1, max_value=8, value=1)
 class_name = st.text_input("Class Name:")
+teacher_name = st.text_area("Teacher Name:")
 grade_level = st.text_input("Grade/Level:")
 unit_title = st.text_input("Unit Title:")
 objectives = st.text_area("Unit Objectives:")
 standards = st.text_area("Standards:")
 potential_lesson_titles = st.text_area("Potential Lesson Titles (separated by commas):")
 general_notes = st.text_area("General Notes:")
-unit_details = f"Class Name: {class_name}\nGrade/Level: {grade_level}\nUnit Title: {unit_title}\nObjectives: {objectives}\nStandards: {standards}\nPotential Lesson Titles: {potential_lesson_titles}\nGeneral Notes: {general_notes}"
+
+unit_details = f"Class Name: {class_name}\Teacher Name: {teacher_name}\nGrade/Level: {grade_level}\nUnit Title: {unit_title}\nObjectives: {objectives}\nStandards: {standards}\nPotential Lesson Titles: {potential_lesson_titles}\nGeneral Notes: {general_notes}"
 
 if st.button("Generate Lesson Plans and Unit Summary"):
     with st.spinner("Generating..."):
