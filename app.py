@@ -52,7 +52,7 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     full_prompt = f"Generate {number_of_lessons} lesson plans for a unit based on the following details:\n{unit_details}\n\n" \
                     "For each lesson, use the following template and include a unique lesson number and title:\n" \
                     "---START LESSON---" \
-                    "<h1>Unit Title: [Unit Title Here]</h1>"  
+                    "<h1>Unit Title: [Unit Title Here]</h1>"  \
                     "<h2>Lesson Number: [Unique Number]</h2>" \
                     "<h2>Lesson Title: [Title Here]</h2>" \
                     "<strong>Objectives:</strong> <p>[Objectives Here]</p>" \
@@ -62,11 +62,10 @@ def generate_lesson_plans(number_of_lessons, unit_details):
                     "<li>Step 2: [Procedure Step 2]</li>" \
                     "<li>Step 3: [Procedure Step 3]</li>" \
                     "<li>Step 4: [Procedure Step 4]</li>" \
-                    "</ol>"
+                    "</ol>" \
                     "<strong>Assessment and Evaluation:</strong> <p>[Assessment Here]</p>" \
                     "<strong>Additional Resources:</strong> <ul><li>[Resource 1]</li><li>[Resource 2]</li><li>[Etc...]</li></ul>" \
                     "---END LESSON---<br><br>" \
-                    
                     "---UNIT SUMMARY---<br>" \
                     "<h2>Unit Summary</h2>" \
                     "<strong>Unit Overview:</strong> <p>[Provide a brief overview of the unit, including the main themes and topics covered.]</p>" \
@@ -77,7 +76,7 @@ def generate_lesson_plans(number_of_lessons, unit_details):
                     "<li>Etc...</li>" \
                     "</ol>" \
                     "<strong>Materials Needed for the Unit:</strong> <ul><li>[Material 1]</li><li>[Material 2]</li><li>[Etc...]</li></ul>" \
-                    "<strong>Additional Notes:</strong> <p>[Any other relevant information, notes for the teacher, or suggestions for extending the unit.]</p>"
+                    "<strong>Additional Notes:</strong> <p>[Any other relevant information, notes for the teacher, or suggestions for extending the unit.]</p>" \
                     "[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
     print("Sending the following prompt to OpenAI:\n", full_prompt)
 
