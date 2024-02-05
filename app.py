@@ -62,6 +62,7 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     your_s3_bucket_name = os.getenv("S3_BUCKET_NAME")
     # Updated prompt to instruct the AI to use a single template repeatedly
     full_prompt = f"Generate {number_of_lessons} lesson plans for a unit based on the following details:\n{unit_details}\n\n" \
+                    "Intelligently infer and fill in with content that logically fits such a unit and lessons. Ensure the unit and each lesson is comprehensive, covering necessary educational components, and ready for educational use. Be clear and explicit in all details." \
                     "For each lesson, use the following template and include a unique lesson number and title:\n" \
                     "---START LESSON---" \
                     "<h1>Unit Title: [Unit Title Here]</h1>"  \
