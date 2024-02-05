@@ -30,12 +30,24 @@ def upload_to_aws_s3(local_file, bucket, s3_file):
         print("Credentials not available")
         return False
 
+from docx import Document
+from htmldocx import HtmlToDocx
+
 def html_to_docx(html_content, docx_filename):
+    # Initialize a new Document object
     document = Document()
     parser = HtmlToDocx()
-    parser.add_html_to_document(html_content, document)
-    document.save(docx_filename)
-    print(f"DOCX file created and saved: {docx_filename}")
+    # Instead of directly adding HTML to the document, we first check if the parser can be safely used
+    try:
+        parser.add_html_to_document(html_content, document)
+    except AttributeError:
+        # If an AttributeError occurs, log an error or handle it appropriately
+        # For simplicity, we'll just print a message here but you might want to handle this more gracefully
+        print(f"Failed to add HTML content to DOCX for {docx_filename} due to an unexpected error.")
+    else:
+        # If no error occurs, save the document
+        document.save(docx_filename)
+        print(f"DOCX file created and saved: {docx_filename}")
 
 def sanitize_filename(filename):
     return "".join([c for c in filename if c.isalpha() or c.isdigit() or c in [' ', '_', '-']]).rstrip()
