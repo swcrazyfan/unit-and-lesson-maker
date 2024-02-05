@@ -3,6 +3,7 @@ import os
 import streamlit as st
 from datetime import datetime
 import tempfile
+import random
 import re
 from docx import Document
 from htmldocx import HtmlToDocx
@@ -48,11 +49,26 @@ def create_zip_file(files, zip_filename):
 
 def generate_lesson_plans(number_of_lessons, unit_details):
     your_s3_bucket_name = os.getenv("S3_BUCKET_NAME")
-    full_prompt = f"Generate a unit consisting of {number_of_lessons} lesson plans based on the following details:\n{unit_details}\n\n"
-    full_prompt += "---UNIT SUMMARY---\n[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
-    
-    print("Sending the following prompt to OpenAI:")
-    print(full_prompt)
+    lesson_plan_template = """
+    ---START [Lesson Title {lesson_number}]---
+    <h1>Lesson {lesson_number}: [Lesson Title Here]</h1>
+    <h2>Objectives</h2>
+    <p>[Objectives Here]</p>
+    <h2>Materials Needed</h2>
+    <p>[Materials Here]</p>
+    <h2>Lesson Procedure</h2>
+    <p>[Procedure Here]</p>
+    <h2>Assessment and Evaluation</h2>
+    <p>[Assessment Here]</p>
+    <h2>Additional Resources</h2>
+    <p>[Resources Here]</p>
+    ---END [Lesson Title {lesson_number}]---
+    """
+    full_prompt = "Generate a unit consisting of {number_of_lessons} lesson plans based on the following details:\n{unit_details}\n\n".format(number_of_lessons=number_of_lessons, unit_details=unit_details)
+    for i in range(1, number_of_lessons + 1):
+        full_prompt += lesson_plan_template.format(lesson_number=i)
+    full_prompt += "\n---UNIT SUMMARY---\n[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
+    print("Sending the following prompt to OpenAI:\n", full_prompt)
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -73,16 +89,25 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     upload_to_aws_s3(temp_prompt_file.name, your_s3_bucket_name, f"prompts/{datetime.now().strftime('%Y%m%d_%H%M%S')}_prompt.txt")
     os.remove(temp_prompt_file.name)
 
-    # Parse the response for the unit summary
+    # Parse the response and generate DOCX files
+    lesson_pattern = re.compile(r'---START \[Lesson Title (\d+)\]---(.*?)---END \[Lesson Title \1\]---', re.DOTALL)
     summary_pattern = re.compile(r'---UNIT SUMMARY---(.*?)$', re.DOTALL)
+    lesson_matches = lesson_pattern.findall(html_content)
     summary_match = summary_pattern.search(html_content)
     docx_files = []
+    for match in lesson_matches:
+        lesson_number, lesson_content = match
+        docx_filename = f"Lesson_{lesson_number}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+        html_to_docx(lesson_content, docx_filename)
+        docx_files.append(docx_filename)
+        print(f"Lesson plan {lesson_number} processed and DOCX created.")
+
     if summary_match:
         summary_content = summary_match.group(1)
         summary_filename = f"Unit_Summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
         html_to_docx(summary_content, summary_filename)
         docx_files.append(summary_filename)
-        print("Unit summary DOCX file created.")
+        print("Unit summary processed and DOCX created.")
 
     # Create a ZIP file containing all DOCX files
     zip_filename = f"Lesson_Plans_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
@@ -101,7 +126,14 @@ def generate_lesson_plans(number_of_lessons, unit_details):
 # Streamlit UI for Input and Triggering the Process
 st.title("Lesson Plan and Unit Summary Generator")
 number_of_lessons = st.number_input("Number of Lessons:", min_value=1, max_value=8, value=1)
-unit_details = st.text_area("Unit Details:")
+class_name = st.text_input("Class Name:")
+grade_level = st.text_input("Grade/Level:")
+unit_title = st.text_input("Unit Title:")
+objectives = st.text_area("Unit Objectives:")
+standards = st.text_area("Standards:")
+potential_lesson_titles = st.text_area("Potential Lesson Titles (separated by commas):")
+general_notes = st.text_area("General Notes:")
+unit_details = f"Class Name: {class_name}\nGrade/Level: {grade_level}\nUnit Title: {unit_title}\nObjectives: {objectives}\nStandards: {standards}\nPotential Lesson Titles: {potential_lesson_titles}\nGeneral Notes: {general_notes}"
 
 if st.button("Generate Lesson Plans and Unit Summary"):
     with st.spinner("Generating..."):
