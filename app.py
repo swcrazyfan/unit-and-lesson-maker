@@ -65,7 +65,7 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     print("Sending the following prompt to OpenAI:\n", full_prompt)
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that can generate detailed lesson plans and unit summaries."},
             {"role": "user", "content": full_prompt},
