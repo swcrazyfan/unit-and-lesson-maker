@@ -65,10 +65,10 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     full_prompt = "Generate a unit consisting of {number_of_lessons} lesson plans based on the following details:\n{unit_details}\n\n".format(number_of_lessons=number_of_lessons, unit_details=unit_details)
     for i in range(1, number_of_lessons + 1):
         full_prompt += lesson_plan_template.format(lesson_number=i)
-    full_prompt += "\n---UNIT SUMMARY---\n[Include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
+    full_prompt += "\n---UNIT SUMMARY---\n[At the end, include an overview of the unit, unit objectives, lesson summaries, materials needed, and other relevant info in this section.]"
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that can generate detailed lesson plans and unit summaries."},
             {"role": "user", "content": full_prompt},
