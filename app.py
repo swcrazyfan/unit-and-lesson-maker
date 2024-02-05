@@ -119,14 +119,14 @@ def generate_lesson_plans(number_of_lessons, unit_details):
     summary_match = summary_pattern.search(html_content)
     docx_files = []
     for i, lesson_content in enumerate(lesson_matches, start=1):
-        docx_filename = f"Lesson_{i}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+        docx_filename = f"Lesson - {i}.docx"
         html_to_docx(lesson_content, docx_filename)
         docx_files.append(docx_filename)
         print(f"Lesson {i} processed and DOCX created.")
 
     if summary_match:
         summary_content = summary_match.group(1)
-        summary_filename = f"Unit_Summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+        summary_filename = f"{unit_title} - Unit Summary.docx"
         html_to_docx(summary_content, summary_filename)
         docx_files.append(summary_filename)
         print("Unit summary processed and DOCX created.")
